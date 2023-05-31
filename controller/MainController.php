@@ -38,7 +38,6 @@ class MainController
     
     // Function to save the Contact Form 7 entry
     function save_cf7_entry($cf7) {
-        // Get the Contact Form 7 form ID
         $form_id = $cf7->id();
         $form = wpcf7_contact_form($form_id);
         $form_title = $form->title;
@@ -47,15 +46,9 @@ class MainController
         $submission = WPCF7_Submission::get_instance();
 
         if ($submission) {
-            // Get the form fields and values
             $form_data = $submission->get_posted_data();
             $post_type = 'from-entry';
-            // $from_name = isset($form_data['your-from-name-field']) ? $form_data['your-from-name-field'] : '';
 
-            // You can process and save the form data as per your requirements
-            // For example, you can save it to the database or send it via email
-
-            // Example: Saving the form data to the WordPress database
             $entry_id = wp_insert_post(array(
                 'post_type' => $post_type,
                 'post_title' => $form_title,
@@ -63,21 +56,7 @@ class MainController
                 'post_category' => array(),
             ));
 
-            // Assign categories based on category titles
-            // $category_titles = array( $form_title ); // Replace with your category titles
-
-            // foreach ($category_titles as $category_title) {
-            // if ($category) {
-            //     wp_set_post_categories($entry_id, array($category->term_id), true);
-            // } else {
-            //     $new_category = wp_insert_term($category_title, 'category');
-            //     if (!is_wp_error($new_category)) {
-            //         wp_set_post_categories($entry_id, array($new_category['term_id']), true);
-            //     }
-            // }
-            
-
-            $taxonomy = 'category'; // Replace with your desired taxonomy (e.g., custom_taxonomy)
+            $taxonomy = 'category'; 
             $args = array(
                 'description' => 'Category for the custom post type',
             );
@@ -90,24 +69,18 @@ class MainController
             
             $category = get_term_by('name', $form_title, 'category');
             wp_set_post_categories($entry_id, array($category->term_id), true);
-            // }
 
-            // Loop through the form fields and values
             foreach ($form_data as $field_name => $field_value) {
-                // Save each field and value as post meta
                 update_post_meta($entry_id, $field_name, $field_value);
             }
         }
     }
-
-    // add_action('add_meta_boxes', 'add_custom_meta_box');
 
     function add_custom_meta_box() {
         add_meta_box('custom_post_meta', 'Form Entry Details', array($this,'render_custom_meta_box'), 'from-entry', 'normal', 'default');
     }
 
     function render_custom_meta_box($post) {
-        // Get all post meta data
         $post_meta = get_post_meta($post->ID);
 
         // Output the meta data
@@ -128,14 +101,11 @@ class MainController
         $output .= '</tbody>';
         $output .= '</table>';
         echo $output;
-        // print_r($post_meta);
     }
 
     // Modify the category checklist for the custom post type
     function exclude_default_categories($args, $post_id) {
         $post_type = get_post_type($post_id);
-
-        // Specify the custom post type for which to exclude default categories
         if ('from-entry' === $post_type) {
             $args['checked_ontop'] = false;
             $args['selected_cats'] = array(); // Exclude default categories
