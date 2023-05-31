@@ -1,1 +1,2 @@
-this is a plugin to save contact form 7 entries in the database as a post type.
+== Save CF7 Entry ==
+License: GPLv2 or later

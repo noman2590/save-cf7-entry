@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Save CF7 Entery 
+Plugin Name: Save CF7 Entry 
 Plugin URI: https://contactform7.com/
 Description: This is a plugin that saves contact form 7 entries into the database
 Author: Noman Akram
