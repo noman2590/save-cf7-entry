@@ -1,0 +1,1 @@
+this is a plugin to save contact form 7 entries in the database as a post type.
