@@ -6,36 +6,75 @@ class MainController
 {
     public function __construct()
     {
-        register_activation_hook(SCF7E_PLUGIN_BASENAME, array( $this, 'activation_hook' ));
+        register_activation_hook( SCF7E_PLUGIN_BASENAME, array( $this, 'activation_hook' ));
         register_uninstall_hook( SCF7E_PLUGIN_BASENAME, array( $this, 'uninstall_hook' ) );
-        add_action( 'init', array( $this, 'create_post_type_on_activation' ) );
+        // add_action( 'init', array( $this, 'create_post_type_on_activation' ) );
         add_action('wpcf7_before_send_mail', array($this, 'save_cf7_entry'));
         add_action('add_meta_boxes', array($this, 'add_custom_meta_box'));
         add_filter('wp_terms_checklist_args', array($this, 'exclude_default_categories'), 10, 2);
+        add_action('admin_menu', array( $this, 'admin_menu' ));
+        add_action('admin_menu', array( $this, 'register_custom_admin_page' ));
     }
 
-    function create_post_type_on_activation() {
-        $labels = array(
-            'name'               => _x( 'Form Entries', 'post type general name' ),
-            'singular_name'      => _x( 'Form Entry', 'post type singular name' ),
-            'menu_name'          => 'Form Entries'
+    public function admin_menu() {
+        add_menu_page(
+            __('CF7 Entries', 'cf7-entries'),
+            __('CF7 Entries', 'cf7-entries'),
+            'manage_options',
+            'manage-cf7-entries',
+            'ContactController::index',
+            'dashicons-database',
+            6
         );
-        $args = array(
-            'labels'        => $labels,
-            'public'        => true,
-            'menu_position' => 5,
-            'supports'      => array( 'title' ),
-            'has_archive'   => true,
-            'taxonomies' => array('category'),
+    }
+
+    function register_custom_admin_page() {
+        add_submenu_page(
+            null, // Set parent_slug to null to create a hidden submenu
+            __('Form Entries', 'form-entries'),
+            __('Form Entries', 'form-entries'),
+            'manage_options',
+            'form-entries',
+            'ContactController::form_entry_details'
         );
-        register_post_type( 'from-entry', $args ); 
-
-        register_taxonomy_for_object_type('category', 'from-entry');
-
     }
 
 
-    
+    public static function set_query_var_custom( $args )
+    {
+        global $wp_query;
+        $wp_query->set("data", $args);
+
+    }
+
+    public function activation_hook() {
+        global $wpdb;
+
+        $charset_collate = $wpdb->get_charset_collate();
+        $table_name = $wpdb->prefix . 'cf7_entries';
+        $sql = "CREATE TABLE  $table_name (
+            `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, 
+            `post_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` timestamp NULL DEFAULT NULL,
+            PRIMARY KEY  (id)
+        ) $charset_collate;";
+        dbDelta($sql);
+
+        $table_name = $wpdb->prefix . 'cf7_entry_meta';
+        $sql = "CREATE TABLE  $table_name (
+            `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, 
+            `cf7_entry_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `meta_key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `meta_value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` timestamp NULL DEFAULT NULL,
+            PRIMARY KEY  (id)
+        ) $charset_collate;";
+
+        dbDelta($sql);
+    }
+
     // Function to save the Contact Form 7 entry
     function save_cf7_entry($cf7) {
         $form_id = $cf7->id();
@@ -47,71 +86,23 @@ class MainController
 
         if ($submission) {
             $form_data = $submission->get_posted_data();
-            $post_type = 'from-entry';
 
-            $entry_id = wp_insert_post(array(
-                'post_type' => $post_type,
-                'post_title' => $form_title,
-                'post_status' => 'publish',
-                'post_category' => array(),
-            ));
+            global $wpdb;
 
-            $taxonomy = 'category'; 
-            $args = array(
-                'description' => 'Category for the custom post type',
-            );
-            
-            register_taxonomy($taxonomy, $post_type, $args);
-            
-            if (!term_exists($form_title, $taxonomy)) {
-                wp_insert_term($form_title, $taxonomy);
+            $table = $wpdb->prefix . 'cf7_entries';
+            $data = array( 'post_id' => $form_id );
+            $wpdb->insert($table, $data);
+            $entry_id = $wpdb->insert_id;
+
+            if( entry_id ) {
+                foreach ($form_data as $field_name => $field_value) {
+                    $table = $wpdb->prefix . 'cf7_entry_meta';
+                    $data = array( 'cf7_entry_id' => $entry_id, 'meta_key' => $field_name, 'meta_value' => $field_value );
+                    $wpdb->insert($table, $data);
+                }
             }
             
-            $category = get_term_by('name', $form_title, 'category');
-            wp_set_post_categories($entry_id, array($category->term_id), true);
-
-            foreach ($form_data as $field_name => $field_value) {
-                update_post_meta($entry_id, $field_name, $field_value);
-            }
         }
-    }
-
-    function add_custom_meta_box() {
-        add_meta_box('custom_post_meta', 'Form Entry Details', array($this,'render_custom_meta_box'), 'from-entry', 'normal', 'default');
-    }
-
-    function render_custom_meta_box($post) {
-        $post_meta = get_post_meta($post->ID);
-
-        // Output the meta data
-        $output =  '<table>';
-        $output .=  '<thead>';
-        $output .=  '<tr>';
-        $output .=  '<th style="width:50%;text-align: left;">Field</th>';
-        $output .=  '<th style="width:50%;text-align: left;">Value</th>';
-        $output .=  '</tr>';
-        $output .=  '</thead>';
-        $output .=  '<tbody>';
-        foreach ($post_meta as $key => $value) {
-            $output .=  '<tr>';
-            $output .=  '<td style="width:50%">'.$key.'</td>';
-            $output .=  '<td style="width:50%">'.$value[0].'</td>';
-            $output .=  '</tr>';
-        }
-        $output .= '</tbody>';
-        $output .= '</table>';
-        echo $output;
-    }
-
-    // Modify the category checklist for the custom post type
-    function exclude_default_categories($args, $post_id) {
-        $post_type = get_post_type($post_id);
-        if ('from-entry' === $post_type) {
-            $args['checked_ontop'] = false;
-            $args['selected_cats'] = array(); // Exclude default categories
-        }
-
-        return $args;
     }
 
 

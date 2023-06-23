@@ -16,12 +16,17 @@ define( 'SCF7E_PLUGIN_BASENAME',  basename( dirname( __FILE__ ) ) . '/' . basena
 
 define( 'SCF7E_CONTROLLER_PATH',   SCF7E_PLUGIN_PATH  . DIRECTORY_SEPARATOR . 'controller' );
 
+define( 'SCF7E_LIB_PATH', SCF7E_PLUGIN_PATH . DIRECTORY_SEPARATOR . 'lib' );
+
 
 
 require_once SCF7E_CONTROLLER_PATH .
     DIRECTORY_SEPARATOR .
     'MainController.php';
 
+require_once SCF7E_CONTROLLER_PATH .
+    DIRECTORY_SEPARATOR .
+    'ContactController.php';
 // ==========================================================================
 // = All app initialization is done in Main_Controller __constructor. =
 // ==========================================================================
