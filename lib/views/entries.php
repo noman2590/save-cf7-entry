@@ -4,7 +4,7 @@
     // print_r($data);
     ?>
     </pre>
-    <h2>Charity Orders Listing</h2>
+    <h2>Contact Forms Listing</h2>
     <div class="tablenav top">
         <form action="" method="get">
             <input type="hidden" name="page" value="manage-charity-orders">
