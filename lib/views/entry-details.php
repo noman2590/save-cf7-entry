@@ -6,7 +6,7 @@
     </pre>
     <h2>Form Entries Listing</h2>
     <div class="tablenav top">
-        <!-- <form action="" method="get">
+        <form action="" method="get">
             <input type="hidden" name="page" value="manage-charity-orders">
             <div class="alignleft actions">
                 <label for="filter-by-date" class="">From Date</label>
@@ -15,8 +15,8 @@
                 <input type="date" name="to_date" id="" value="<?php echo (isset($_GET['to_date'])) ? $_GET['to_date'] : '' ?>">
                 <input type="submit" name="filter_action" id="post-query-submit" class="button" value="Filter">		
             </div>
-        </form> -->
-        <div class="tablenav-pages one-page"><span class="displaying-num">Total Entries: <?php echo count($data['row']) ?></span>
+        </form>
+        <div class="tablenav-pages one-page"><span class="displaying-num"><a href="<?php echo site_url();?>/wp-admin/admin.php?page=manage-cf7-entries">Go Back</a> | Total Entries: <?php echo count($data['row']) ?></span>
     </div>
 	<div class="bg-white">
 		<div class="ai1wm-left">

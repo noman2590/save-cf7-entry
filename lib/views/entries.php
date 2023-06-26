@@ -1,9 +1,9 @@
 <div class="wrap">
-    <pre>
+    <!-- <pre> -->
     <?php
     // print_r($data);
     ?>
-    </pre>
+    <!-- </pre> -->
     <h2>Contact Forms Listing</h2>
     <div class="tablenav top">
         <form action="" method="get">
@@ -38,7 +38,7 @@
                         <td><?php echo $value->id ?></td>
                         <td><?php echo $value->post_title ?></td>
                         <td><?php echo $value->total_entries ?></td>
-                        <td><a class="btn button button-primary" href="<?php echo site_url();?>/wp-admin/admin.php?page=manage-cf7-entries&from=<?php echo $value->id; ?>">See Entries</a></td>
+                        <td><a class="btn button button-primary" href="<?php echo site_url();?>/wp-admin/admin.php?page=form-entries&form=<?php echo $value->id; ?>">See Entries</a></td>
                     </tr>
                     <?php }}else { ?>
                     <tr>
