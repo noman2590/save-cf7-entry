@@ -33,7 +33,7 @@ class ContactController extends MainController {
             " );
 
             $form_entries =  $wpdb->get_results("SELECT * 
-            FROM {$wpdb->prefix}cf7_entries
+            FROM {$wpdb->prefix}cf7_entries WHERE post_id = $formid
             " );
 
             parent::set_query_var_custom(['data'=> $entries, 'row' => $form_entries ]);

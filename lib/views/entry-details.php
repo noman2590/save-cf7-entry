@@ -1,9 +1,4 @@
-<div class="wrap">
-    <pre>
-    <?php
-    // print_r($data['data']);
-    ?>
-    </pre>
+<div class="wrap"> 
     <h2>Form Entries Listing</h2>
     <div class="tablenav top">
         <form action="" method="get">
