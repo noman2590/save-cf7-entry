@@ -10,3 +10,41 @@
 .entry-detail-page table#entryTable thead th, .entry-detail-page table#entryTable thead td {
     padding: 8px 10px;
 }
+
+.entry-detail-page thead tr th:last-child {
+    width: 70% !important;
+}
+
+@media screen and (max-width: 782px) {
+    .cf7-entry-page .tablenav.top .tablenav-pages.one-page,
+    .cf7-entry-page .tablenav.top .displaying-num,
+    .cf7-entry-page .tablenav .view-switch, .tablenav.top .actions {
+        display: block;
+        width: auto;
+    }
+    .cf7-entry-page .tablenav.top .tablenav-pages.one-page {
+        float: left;
+    }
+}
+
+@media screen and (min-width: 700px) and (max-width: 782px) {
+    .cf7-entry-page .tablenav.top .tablenav-pages.one-page {
+        float: right;
+    }
+    .cf7-entry-page .tablenav.top .actions {
+        float: left;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .cf7-entry-page .tablenav.top .tablenav-pages.one-page,
+    .cf7-entry-page .tablenav.top .actions {
+        float: none;
+    }
+    .cf7-entry-page .tablenav .view-switch, .tablenav.top {
+        text-align: center;
+    }
+    .cf7-entry-page .tablenav.top .actions {
+        margin-bottom: 5px;
+    }
+}

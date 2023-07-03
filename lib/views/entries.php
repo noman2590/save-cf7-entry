@@ -1,9 +1,4 @@
-<div class="wrap">
-    <!-- <pre> -->
-    <?php
-    // print_r($data);
-    ?>
-    <!-- </pre> -->
+<div class="wrap cf7-entry-page">
     <h2>Contact Forms Listing</h2>
     <div class="tablenav top">
         <form action="" method="get">
@@ -11,8 +6,12 @@
             <div class="alignleft actions">
                 <label for="filter-by-date" class="">From Date</label>
                 <input type="date" name="from_date" id="" value="<?php echo (isset($_GET['from_date'])) ? $_GET['from_date'] : '' ?>">
+            </div>
+            <div class="alignleft actions">
                 <label for="filter-by-date" class="">To Date</label>
                 <input type="date" name="to_date" id="" value="<?php echo (isset($_GET['to_date'])) ? $_GET['to_date'] : '' ?>">
+            </div>
+            <div class="alignleft actions">
                 <input type="submit" name="filter_action" id="post-query-submit" class="button" value="Filter">		
             </div>
         </form>
