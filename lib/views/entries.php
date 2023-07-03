@@ -7,7 +7,7 @@
     <h2>Contact Forms Listing</h2>
     <div class="tablenav top">
         <form action="" method="get">
-            <input type="hidden" name="page" value="manage-charity-orders">
+            <input type="hidden" name="page" value="manage-cf7-entries">
             <div class="alignleft actions">
                 <label for="filter-by-date" class="">From Date</label>
                 <input type="date" name="from_date" id="" value="<?php echo (isset($_GET['from_date'])) ? $_GET['from_date'] : '' ?>">

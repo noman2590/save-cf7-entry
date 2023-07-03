@@ -1,8 +1,30 @@
-<div class="wrap"> 
+<style>
+    .notice {
+        display:none;
+    }
+</style>
+
+<?php
+$formData = array();
+foreach ($data['data'] as $row) {
+  $parentId = $row->cf7_entry_id;
+  if (!isset($formData[$parentId])) {
+    $formData[$parentId] = array(
+      'id' => $row->id,
+      'created_at' => $row->created_at,
+      'cf7_entry_id' => $parentId,
+      'meta' => array()
+    );
+  }
+  $formData[$parentId]['meta'][$row->meta_key] = $row->meta_value;
+}
+?>
+<div class="wrap entry-detail-page"> 
     <h2>Form Entries Listing</h2>
     <div class="tablenav top">
         <form action="" method="get">
-            <input type="hidden" name="page" value="manage-charity-orders">
+            <input type="hidden" name="page" value="form-entries">
+            <input type="hidden" name="form" value="<?php echo $_GET['form']; ?>">
             <div class="alignleft actions">
                 <label for="filter-by-date" class="">From Date</label>
                 <input type="date" name="from_date" id="" value="<?php echo (isset($_GET['from_date'])) ? $_GET['from_date'] : '' ?>">
@@ -11,44 +33,37 @@
                 <input type="submit" name="filter_action" id="post-query-submit" class="button" value="Filter">		
             </div>
         </form>
-        <div class="tablenav-pages one-page"><span class="displaying-num"><a href="<?php echo site_url();?>/wp-admin/admin.php?page=manage-cf7-entries">Go Back</a> | Total Entries: <?php echo count($data['row']) ?></span>
+        <div class="tablenav-pages one-page"><span class="displaying-num"><a href="<?php echo site_url();?>/wp-admin/admin.php?page=manage-cf7-entries">Go Back</a> | Total Entries: <?php echo count($formData) ?></span>
     </div>
 	<div class="bg-white">
 		<div class="ai1wm-left">
-            <table id="myTable" class="striped widefat">
+            <table id="entryTable" class="striped widefat">
                 <thead>
                 <tr>
-                    <?php
-                    $firstEntryId = $data['data'][0]->cf7_entry_id;
-                    $iterations = 0;
-                    foreach($data['data'] as $entry) { 
-                        if ($entry->cf7_entry_id == $firstEntryId) {
-                        $iterations++;
-                    ?>
-                    <th><?php echo $entry->meta_key ?></th>
-                    <?php }} ?>
+                    <th>ID</th>
+                    <th>Entry Date/Time</th>
+                    <th>Form Data</th>
                  </tr>
                 </thead>
                 <tbody>
                     <?php 
                     if(count($data['data'])){
-                        $currentEntryId = null;
-                        $iterations;
-                        $entry_count = 0;
-                        foreach ($data['data'] as $key => $value){
-                            if ($entry_count == 0) {
-                                echo '<tr>';
-                            }
-                            echo '<td>'.$value->meta_value.'</td>'; 
-                            if ($entry_count == 4) {
-                                echo '</tr>';
-                            }
-                            $entry_count++;
-                            $entry_count = ($entry_count != $iterations) ? $entry_count++ : 0;
-                        }
-                    }else { ?>
+                    foreach ($formData as $row): ?>
+                        <tr>
+                            <td><?php echo $row['cf7_entry_id']; ?></td>
+                            <td><?php echo $row['created_at']; ?></td>
+                            <td>
+                            <?php foreach ($row['meta'] as $metaKey => $metaValue): ?>
+                                <?php echo $metaKey . ': ' . $metaValue; ?><br>
+                            <?php endforeach; ?>
+                            </td>
+                        </tr>
+                    <?php 
+                    endforeach;
+                    } else { 
+                    ?>
                     <tr>
-                        <td colspan="<?php echo $iterations ?>">
+                        <td colspan="3">
                             <p style="text-align:center">No entry found</p>
                         </td>
                     </tr>
@@ -58,3 +73,9 @@
         </div>
 	</div>
 </div>
+
+<script>
+    jQuery(document).ready( function ($) {
+        $('#entryTable').DataTable();
+    });
+</script>

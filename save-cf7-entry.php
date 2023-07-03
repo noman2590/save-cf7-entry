@@ -14,6 +14,8 @@ define( 'SCF7E_PLUGIN_PATH', dirname( __FILE__ ) );
 
 define( 'SCF7E_PLUGIN_BASENAME',  basename( dirname( __FILE__ ) ) . '/' . basename( __FILE__ ) );
 
+define( 'SCF7E_PLUGIN_URL', plugins_url( '', SCF7E_PLUGIN_BASENAME ) );
+
 define( 'SCF7E_CONTROLLER_PATH',   SCF7E_PLUGIN_PATH  . DIRECTORY_SEPARATOR . 'controller' );
 
 define( 'SCF7E_LIB_PATH', SCF7E_PLUGIN_PATH . DIRECTORY_SEPARATOR . 'lib' );

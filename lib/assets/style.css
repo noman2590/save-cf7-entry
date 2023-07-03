@@ -1,0 +1,12 @@
+.entry-detail-page .dataTables_length, .entry-detail-page .dataTables_filter {
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+.entry-detail-page .dataTables_length select {
+    padding-right: 20px;
+}
+
+.entry-detail-page table#entryTable thead th, .entry-detail-page table#entryTable thead td {
+    padding: 8px 10px;
+}

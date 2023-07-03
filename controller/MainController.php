@@ -14,6 +14,7 @@ class MainController
         add_filter('wp_terms_checklist_args', array($this, 'exclude_default_categories'), 10, 2);
         add_action('admin_menu', array( $this, 'admin_menu' ));
         add_action('admin_menu', array( $this, 'register_custom_admin_page' ));
+        add_action('admin_enqueue_scripts', array( $this, 'enqueue_admin_data_tables_on_custom_page'));
     }
 
     public function admin_menu() {
@@ -105,5 +106,15 @@ class MainController
         }
     }
 
+    function enqueue_admin_data_tables_on_custom_page() {
+        global $pagenow;
+        if ($pagenow === 'admin.php' && $_GET['page'] === 'form-entries') {
+            wp_enqueue_script('jquery');
+            wp_enqueue_script('data_tables', 'https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js', array('jquery'), '1.10.25', true);
+            wp_enqueue_style('data_tables_style', 'https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css');
+        }
+        wp_enqueue_style('plugin-style', SCF7E_PLUGIN_URL . '/lib/assets/style.css');
+    }
+      
 
 }
