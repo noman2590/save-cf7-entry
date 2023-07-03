@@ -14,6 +14,7 @@ class MainController
         add_action('admin_menu', array( $this, 'scf7e_admin_menu' ));
         add_action('admin_menu', array( $this, 'scf7e_register_custom_admin_page' ));
         add_action('admin_enqueue_scripts', array( $this, 'scf7e_enqueue_admin_scripts'));
+        add_filter('admin_title', array( $this, 'scf7e_custom_admin_title'), 10, 2);
     }
 
     public function scf7e_admin_menu() {
@@ -37,6 +38,14 @@ class MainController
             'form-entries',
             'ContactController::form_entry_details'
         );
+    }
+
+    function scf7e_custom_admin_title($admin_title, $title) {
+        global $pagenow;
+        if ($pagenow === 'admin.php' && $_GET['page'] === 'form-entries') {
+            return 'Form Entries Listing ‹ ' . get_bloginfo('name');
+        }
+        return $admin_title;
     }
 
 
