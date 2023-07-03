@@ -38,7 +38,7 @@
                         <td><?php echo $value->id ?></td>
                         <td><?php echo $value->post_title ?></td>
                         <td><?php echo $value->total_entries ?></td>
-                        <td><a class="btn button button-primary" href="<?php echo site_url();?>/wp-admin/admin.php?page=form-entries&form=<?php echo $value->id; ?>">See Entries</a></td>
+                        <td><a class="btn button button-primary" href="<?php echo site_url();?>/wp-admin/admin.php?page=form-entries&form=<?php echo $value->id; ?>&from_date=<?=$_GET['from_date']?>&to_date=<?=$_GET['to_date']?>">See Entries</a></td>
                     </tr>
                     <?php }}else { ?>
                     <tr>

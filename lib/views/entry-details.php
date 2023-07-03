@@ -33,7 +33,7 @@ foreach ($data['data'] as $row) {
                 <input type="submit" name="filter_action" id="post-query-submit" class="button" value="Filter">		
             </div>
         </form>
-        <div class="tablenav-pages one-page"><span class="displaying-num"><a href="<?php echo site_url();?>/wp-admin/admin.php?page=manage-cf7-entries">Go Back</a> | Total Entries: <?php echo count($formData) ?></span>
+        <div class="tablenav-pages one-page"><span class="displaying-num"><a href="javascript:history.go(-1)">Go Back</a> | Total Entries: <?php echo count($formData) ?></span>
     </div>
 	<div class="bg-white">
 		<div class="ai1wm-left">
