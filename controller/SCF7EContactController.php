@@ -1,7 +1,7 @@
 <?php
 
 
-class ContactController extends MainController {
+class SCF7EContactController extends SCF7EMainController {
     public static function index(){
         /**
          * Extracting passed aguments

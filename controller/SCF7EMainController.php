@@ -2,15 +2,12 @@
 
 require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-class MainController
+class SCF7EMainController
 {
     public function __construct()
     {
         register_activation_hook( SCF7E_PLUGIN_BASENAME, array( $this, 'scf7e_activation_hook' ));
-        register_uninstall_hook( SCF7E_PLUGIN_BASENAME, array( $this, 'scf7e_uninstall_hook' ) );
         add_action('wpcf7_before_send_mail', array($this, 'scf7e_save_cf7_entry'));
-        add_action('add_meta_boxes', array($this, 'scf7e_add_custom_meta_box'));
-        add_filter('wp_terms_checklist_args', array($this, 'scf7e_exclude_default_categories'), 10, 2);
         add_action('admin_menu', array( $this, 'scf7e_admin_menu' ));
         add_action('admin_menu', array( $this, 'scf7e_register_custom_admin_page' ));
         add_action('admin_enqueue_scripts', array( $this, 'scf7e_enqueue_admin_scripts'));
@@ -23,7 +20,7 @@ class MainController
             __('CF7 Entries', 'cf7-entries'),
             'manage_options',
             'manage-cf7-entries',
-            'ContactController::index',
+            'SCF7EContactController::index',
             'dashicons-database',
             6
         );
@@ -36,7 +33,7 @@ class MainController
             __('Form Entries', 'form-entries'),
             'manage_options',
             'form-entries',
-            'ContactController::form_entry_details'
+            'SCF7EContactController::form_entry_details'
         );
     }
 

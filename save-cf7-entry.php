@@ -24,12 +24,12 @@ define( 'SCF7E_LIB_PATH', SCF7E_PLUGIN_PATH . DIRECTORY_SEPARATOR . 'lib' );
 
 require_once SCF7E_CONTROLLER_PATH .
     DIRECTORY_SEPARATOR .
-    'MainController.php';
+    'SCF7EMainController.php';
 
 require_once SCF7E_CONTROLLER_PATH .
     DIRECTORY_SEPARATOR .
-    'ContactController.php';
+    'SCF7EContactController.php';
 // ==========================================================================
-// = All app initialization is done in Main_Controller __constructor. =
+// = All app initialization is done in SCF7EMainController __constructor. =
 // ==========================================================================
-$main_controller = new MainController();
+$main_controller = new SCF7EMainController();
