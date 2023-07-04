@@ -1,4 +1,8 @@
 <div class="wrap cf7-entry-page">
+    <?php 
+        $from_date = (isset($_GET['from_date'])) ? $_GET['from_date'] : ''; 
+        $to_date = (isset($_GET['to_date'])) ? $_GET['to_date'] : ''; 
+    ?>
     <h2>Contact Forms Listing</h2>
     <div class="tablenav top">
         <form action="" method="get">
@@ -37,7 +41,7 @@
                         <td><?php echo $value->id ?></td>
                         <td><?php echo $value->post_title ?></td>
                         <td><?php echo $value->total_entries ?></td>
-                        <td><a class="btn button button-primary" href="<?php echo site_url();?>/wp-admin/admin.php?page=form-entries&form=<?php echo $value->id; ?>&from_date=<?=$_GET['from_date']?>&to_date=<?=$_GET['to_date']?>">See Entries</a></td>
+                        <td><a class="btn button button-primary" href="<?php echo site_url();?>/wp-admin/admin.php?page=form-entries&form=<?php echo $value->id; ?>&from_date=<?=$from_date?>&to_date=<?=$to_date?>">See Entries</a></td>
                     </tr>
                     <?php }}else { ?>
                     <tr>

@@ -1,4 +1,7 @@
 <?php
+$from_date = (isset($_GET['from_date'])) ? $_GET['from_date'] : ''; 
+$to_date = (isset($_GET['to_date'])) ? $_GET['to_date'] : ''; 
+
 $formData = array();
 foreach ($data['data'] as $row) {
   $parentId = $row->cf7_entry_id;
@@ -21,11 +24,11 @@ foreach ($data['data'] as $row) {
             <input type="hidden" name="form" value="<?php echo $_GET['form']; ?>">
             <div class="alignleft actions">
                 <label for="filter-by-date" class="">From Date</label>
-                <input type="date" name="from_date" id="" value="<?php echo (isset($_GET['from_date'])) ? $_GET['from_date'] : '' ?>">		
+                <input type="date" name="from_date" id="" value="<?=$from_date?>">		
             </div>
             <div class="alignleft actions">
                 <label for="filter-by-date" class="">To Date</label>
-                <input type="date" name="to_date" id="" value="<?php echo (isset($_GET['to_date'])) ? $_GET['to_date'] : '' ?>">
+                <input type="date" name="to_date" id="" value="<?=$to_date?>">
             </div>
             <div class="alignleft actions">
                 <input type="submit" name="filter_action" id="post-query-submit" class="button" value="Filter">
