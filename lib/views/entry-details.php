@@ -55,7 +55,7 @@ foreach ($data['data'] as $row) {
                             <td><?php echo $row['created_at']; ?></td>
                             <td>
                             <?php foreach ($row['meta'] as $metaKey => $metaValue): ?>
-                                <?php echo $metaKey . ': ' . $metaValue; ?><br>
+                                <?php echo '<b>' . $metaKey . ':</b> ' . $metaValue; ?><br>
                             <?php endforeach; ?>
                             </td>
                         </tr>
