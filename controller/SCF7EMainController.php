@@ -48,27 +48,30 @@ class SCF7EMainController
 
         $charset_collate = $wpdb->get_charset_collate();
         $table_name = $wpdb->prefix . 'cf7_entries';
-        $sql = "CREATE TABLE  $table_name (
-            `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, 
-            `post_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-            `updated_at` timestamp NULL DEFAULT NULL,
-            PRIMARY KEY  (id)
-        ) $charset_collate;";
-        dbDelta($sql);
+        if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) !== $table_name ) {
+            $sql = "CREATE TABLE  $table_name (
+                `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, 
+                `post_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+                `updated_at` timestamp NULL DEFAULT NULL,
+                PRIMARY KEY  (id)
+            ) $charset_collate;";
+            dbDelta($sql);
+        }
 
         $table_name = $wpdb->prefix . 'cf7_entry_meta';
-        $sql = "CREATE TABLE  $table_name (
-            `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, 
-            `cf7_entry_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `meta_key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `meta_value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-            `updated_at` timestamp NULL DEFAULT NULL,
-            PRIMARY KEY  (id)
-        ) $charset_collate;";
-
-        dbDelta($sql);
+        if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) !== $table_name ) {
+            $sql = "CREATE TABLE  $table_name (
+                `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, 
+                `cf7_entry_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `meta_key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `meta_value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+                `updated_at` timestamp NULL DEFAULT NULL,
+                PRIMARY KEY  (id)
+            ) $charset_collate;";
+            dbDelta($sql);
+        }
     }
 
     // Function to save the Contact Form 7 entry
