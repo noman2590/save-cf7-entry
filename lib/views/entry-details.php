@@ -43,7 +43,16 @@ foreach ($data['data'] as $row) {
                 <tr>
                     <th>ID</th>
                     <th>Entry Date/Time</th>
-                    <th>Form Data</th>
+                    <?php $allMetaKeys = []; ?>
+                    <?php if (count($formData) > 0): ?>
+                        <?php foreach ($formData as $row): ?>
+                            <?php $allMetaKeys = array_merge($allMetaKeys, array_keys($row['meta'])); ?>
+                        <?php endforeach; ?>
+                        <?php $allMetaKeys = array_unique($allMetaKeys); ?>
+                        <?php foreach ($allMetaKeys as $metaKey): ?>
+                            <th><?php echo $metaKey; ?></th>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                  </tr>
                 </thead>
                 <tbody>
@@ -53,11 +62,9 @@ foreach ($data['data'] as $row) {
                         <tr>
                             <td><?php echo $row['cf7_entry_id']; ?></td>
                             <td><?php echo $row['created_at']; ?></td>
-                            <td>
-                            <?php foreach ($row['meta'] as $metaKey => $metaValue): ?>
-                                <?php echo '<b>' . $metaKey . ':</b> ' . $metaValue; ?><br>
+                            <?php foreach ($allMetaKeys as $metaKey): ?>
+                                <td><?php echo isset($row['meta'][$metaKey]) ? $row['meta'][$metaKey] : ''; ?></td>
                             <?php endforeach; ?>
-                            </td>
                         </tr>
                     <?php 
                     endforeach;
@@ -77,7 +84,10 @@ foreach ($data['data'] as $row) {
 
 <script>
     jQuery(document).ready( function ($) {
-        $('#entryTable').DataTable();
+        var table = $('#entryTable').DataTable({
+            "autoWidth": true
+        });
+        // table.columns.adjust().draw();
         $('#toplevel_page_manage-cf7-entries').addClass('current');
         $('#toplevel_page_manage-cf7-entries a').addClass('current');
     });
