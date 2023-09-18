@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 class SCF7EMainController

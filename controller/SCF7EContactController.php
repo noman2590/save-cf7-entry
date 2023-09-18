@@ -1,5 +1,6 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 class SCF7EContactController extends SCF7EMainController {
     public static function index(){

@@ -21,7 +21,7 @@ foreach ($data['data'] as $row) {
     <div class="tablenav top">
         <form action="" method="get">
             <input type="hidden" name="page" value="form-entries">
-            <input type="hidden" name="form" value="<?php echo $_GET['form']; ?>">
+            <input type="hidden" name="form" value="<?php echo esc_html($_GET['form']); ?>">
             <div class="alignleft actions">
                 <label for="filter-by-date" class="">From Date</label>
                 <input type="date" name="from_date" id="" value="<?=$from_date?>">		
@@ -34,7 +34,7 @@ foreach ($data['data'] as $row) {
                 <input type="submit" name="filter_action" id="post-query-submit" class="button" value="Filter">
             </div>
         </form>
-        <div class="tablenav-pages one-page"><span class="displaying-num"><a href="javascript:history.go(-1)">Go Back</a> | Total Entries: <?php echo count($formData) ?></span>
+        <div class="tablenav-pages one-page"><span class="displaying-num"><a href="javascript:history.go(-1)">Go Back</a> | Total Entries: <?php echo esc_html(count($formData)) ?></span>
     </div>
 	<div class="bg-white">
 		<div class="ai1wm-left">
@@ -51,11 +51,11 @@ foreach ($data['data'] as $row) {
                     if(count($data['data'])){
                     foreach ($formData as $row): ?>
                         <tr>
-                            <td><?php echo $row['cf7_entry_id']; ?></td>
-                            <td><?php echo $row['created_at']; ?></td>
+                            <td><?php echo esc_html($row['cf7_entry_id']); ?></td>
+                            <td><?php echo esc_html($row['created_at']); ?></td>
                             <td>
                             <?php foreach ($row['meta'] as $metaKey => $metaValue): ?>
-                                <?php echo '<b>' . $metaKey . ':</b> ' . $metaValue; ?><br>
+                                <?php echo wp_kses('<b>' . $metaKey . ':</b> ' . $metaValue, array('b' => array())); ?><br>
                             <?php endforeach; ?>
                             </td>
                         </tr>
