@@ -43,16 +43,7 @@ foreach ($data['data'] as $row) {
                 <tr>
                     <th>ID</th>
                     <th>Entry Date/Time</th>
-                    <?php $allMetaKeys = []; ?>
-                    <?php if (count($formData) > 0): ?>
-                        <?php foreach ($formData as $row): ?>
-                            <?php $allMetaKeys = array_merge($allMetaKeys, array_keys($row['meta'])); ?>
-                        <?php endforeach; ?>
-                        <?php $allMetaKeys = array_unique($allMetaKeys); ?>
-                        <?php foreach ($allMetaKeys as $metaKey): ?>
-                            <th><?php echo $metaKey; ?></th>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                    <th>Form Data</th>
                  </tr>
                 </thead>
                 <tbody>
