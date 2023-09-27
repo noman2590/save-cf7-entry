@@ -109,10 +109,10 @@ class SCF7EMainController
     function scf7e_enqueue_admin_scripts () {
         global $pagenow;
         if ($pagenow === 'admin.php' && $_GET['page'] === 'form-entries') {
-            wp_enqueue_script('data_tables', 'https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js', array('jquery'), '1.10.25', true);
-            wp_enqueue_style('data_tables_style', 'https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css');
+            wp_enqueue_script('data_tables', SCF7E_PLUGIN_URL . '/lib/assets/js/jquery.dataTables.min.js', array('jquery'), '1.10.25', true);
+            wp_enqueue_style('data_tables_style', SCF7E_PLUGIN_URL . '/lib/assets/css/jquery.dataTables.min.css');
         }
-        wp_enqueue_style('plugin-style', SCF7E_PLUGIN_URL . '/lib/assets/style.css');
+        wp_enqueue_style('plugin-style', SCF7E_PLUGIN_URL . '/lib/assets/css/style.css');
     }
       
 
