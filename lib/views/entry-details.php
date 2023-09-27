@@ -23,7 +23,7 @@
     <div class="tablenav top">
         <form action="" method="get">
             <input type="hidden" name="page" value="form-entries">
-            <input type="hidden" name="form" value="<?php echo sanitize_text_field($_GET['form']); ?>">
+            <input type="hidden" name="form" value="<?php echo esc_attr(sanitize_text_field($_GET['form'])); ?>">
             <div class="alignleft actions">
                 <label for="filter-by-date" class="">From Date</label>
                 <input type="date" name="from_date" id="" value="<?php echo esc_attr($from_date)?>">		

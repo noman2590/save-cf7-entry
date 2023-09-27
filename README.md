@@ -13,13 +13,21 @@ This plugin is released under the GNU General Public License Version 2 (GPLv2).
 Basic Usage
 -----------
 
-Install the Save CF7 Entry plugin through the **Add Plugins** screen (**Plugins > Add New**). After activating the plugin, the **CF7 Entries** menu will appear in the left sidebar. You can see the form entries by under that menu. Entries for each form are grouped separately. These entries can be viewed easily using the search and sort feature. You can also filter the entries between some specific dates.
+Install the Save CF7 Entry plugin through the **Add Plugins** screen (**Plugins > Add New**). After activating the plugin, the **CF7 Entries** menu will appear in the left sidebar. You can see the form entries by clicking that menu. Entries for each form are grouped separately. These entries can be viewed easily using the search and sort feature. You can also filter the entries between some specific dates.
 
 
 Version
 -------
 
 Current version of the plugin is 1.0.0.
+
+Requirements
+------------
+
+This plugin has the following requirements.
+1. PHP version 7.4 or greater.
+2. WordPress version 5.0 or greater.
+3. Contact form 7 plugin.
 
 Developed By
 ------------
