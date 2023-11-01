@@ -40,12 +40,20 @@
     </div>
 	<div class="bg-white">
 		<div class="ai1wm-left">
-            <table id="entryTable" class="striped widefat">
+        <table id="entryTable" class="striped widefat">
                 <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Entry Date/Time</th>
-                    <th>Form Data</th>
+                    <?php $allMetaKeys = []; ?>
+                    <?php if (count($formData) > 0): ?>
+                        <?php foreach ($formData as $row): ?>
+                            <?php $allMetaKeys = array_merge($allMetaKeys, array_keys($row['meta'])); ?>
+                        <?php endforeach; ?>
+                        <?php $allMetaKeys = array_unique($allMetaKeys); ?>
+                        <?php foreach ($allMetaKeys as $metaKey): ?>
+                            <th><?php echo esc_attr($metaKey); ?></th>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                  </tr>
                 </thead>
                 <tbody>
@@ -53,11 +61,9 @@
                     if(count($data['data'])){
                     foreach ($formData as $row): ?>
                         <tr>
-                            <td><?php echo esc_attr($row['cf7_entry_id']); ?></td>
-                            <td><?php echo esc_attr($row['created_at']); ?></td>
-                            <td>
-                            <?php foreach ($row['meta'] as $metaKey => $metaValue): ?>
-                                <?php echo wp_kses('<b>' . $metaKey . ':</b> ' . $metaValue, array('b' => array())); ?><br>
+                            <td><?php echo $row['created_at']; ?></td>
+                            <?php foreach ($allMetaKeys as $metaKey): ?>
+                                <td><?php echo isset($row['meta'][$metaKey]) ? esc_attr($row['meta'][$metaKey]) : ''; ?></td>
                             <?php endforeach; ?>
                         </tr>
                     <?php 
@@ -81,7 +87,6 @@
         var table = $('#entryTable').DataTable({
             "autoWidth": true
         });
-        // table.columns.adjust().draw();
         $('#toplevel_page_manage-cf7-entries').addClass('current');
         $('#toplevel_page_manage-cf7-entries a').addClass('current');
     });

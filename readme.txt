@@ -3,8 +3,8 @@ Contributors: nomanakram2590
 Tags: contact form enteirs, save contact forms, contact form backup
 Requires at least: 5.0
 Requires PHP: 7.4
-Tested up to: 6.3
-Stable tag: 1.0.0
+Tested up to: 6.3.2
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,3 +44,7 @@ With the default configuration, this plugin, in itself, does not:
 = 1.0.0 =
 
 First Release.
+
+= 1.0.1 =
+
+Better layout for entries listing.

@@ -15,6 +15,11 @@
     width: 70% !important;
 }
 
+.entry-detail-page table.dataTable thead th, 
+.entry-detail-page table.dataTable tbody td {
+    width: fit-content !important;
+}
+
 @media screen and (max-width: 782px) {
     .cf7-entry-page .tablenav.top .tablenav-pages.one-page,
     .cf7-entry-page .tablenav.top .displaying-num,

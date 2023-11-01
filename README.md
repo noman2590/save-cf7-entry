@@ -19,7 +19,7 @@ Install the Save CF7 Entry plugin through the **Add Plugins** screen (**Plugins 
 Version
 -------
 
-Current version of the plugin is 1.0.0.
+Current version of the plugin is 1.0.1.
 
 Requirements
 ------------
