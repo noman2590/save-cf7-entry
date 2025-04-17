@@ -20,6 +20,12 @@
     width: fit-content !important;
 }
 
+.entry-detail-page table.dataTable tbody td button.dashicon-button {
+    background: no-repeat;
+    border: none;
+    cursor: pointer;
+}
+
 @media screen and (max-width: 782px) {
     .cf7-entry-page .tablenav.top .tablenav-pages.one-page,
     .cf7-entry-page .tablenav.top .displaying-num,

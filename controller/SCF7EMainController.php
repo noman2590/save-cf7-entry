@@ -13,6 +13,9 @@ class SCF7EMainController
         add_action('admin_menu', array( $this, 'scf7e_admin_menu' ));
         add_action('admin_menu', array( $this, 'scf7e_register_custom_admin_page' ));
         add_action('admin_enqueue_scripts', array( $this, 'scf7e_enqueue_admin_scripts'));
+        add_action('admin_init', array( $this, 'scf7e_check_cf7_installed'));
+        add_action('admin_post_scf7e_delete_entry', array( $this, 'scf7e_handle_delete_entry'));
+        add_action('admin_notices', array( $this, 'scf7e_display_admin_notice'));
     }
 
     public function scf7e_admin_menu() {
@@ -106,6 +109,7 @@ class SCF7EMainController
         }
     }
 
+    // enqueue wp admin script
     function scf7e_enqueue_admin_scripts () {
         global $pagenow;
         if ($pagenow === 'admin.php' && $_GET['page'] === 'form-entries') {
@@ -114,6 +118,116 @@ class SCF7EMainController
         }
         wp_enqueue_style('plugin-style', SCF7E_PLUGIN_URL . '/lib/assets/css/style.css');
     }
-      
+
+    // show notice if contact form plugin isn't active
+    public function scf7e_check_cf7_installed() {
+        if (!class_exists('WPCF7')) {
+            add_action('admin_notices', array( $this, 'scf7e_cf7_admin_notice'));
+        }
+    }
+    
+    // Function to display the admin notice
+    public function scf7e_cf7_admin_notice() {
+        ?>
+        <div class="notice notice-warning is-dismissible">
+            <p><?php _e('Contact Form 7 is not installed or activated. Please install and activate Contact Form 7 to use this plugin.', 'save-cf7-entry'); ?></p>
+        </div>
+        <?php
+    }
+
+    // format form field names 
+    public static function scf7e_convert_to_title_case($string) {
+        $string_with_spaces = str_replace('-', ' ', $string);
+        $title_case_string = ucwords($string_with_spaces);
+        return $title_case_string;
+    }
+
+    // function to delete entries
+    public function scf7e_handle_delete_entry() {
+
+        global $wpdb;
+
+        if (!isset($_POST['scf7e_delete_entry_nonce']) || !wp_verify_nonce($_POST['scf7e_delete_entry_nonce'], 'scf7e_delete_entry_nonce_action')) {
+            set_transient('scf7e_admin_failed', 'Nonce verification failed.', 10);
+            wp_redirect( wp_get_referer() );
+            exit;
+        }
+
+        if (!current_user_can('manage_options')) {
+            set_transient('scf7e_admin_failed', 'You do not have permission to perform this action.', 10);
+            wp_redirect( wp_get_referer() );
+            exit;
+        }
+
+        if (isset($_POST['entry_id']) && is_numeric($_POST['entry_id'])) {
+            $entry_id = intval($_POST['entry_id']);
+
+            $table_name = $wpdb->prefix . 'cf7_entries';
+            $meta_table_name = $wpdb->prefix . 'cf7_entry_meta'; 
+
+            $result = $wpdb->delete($table_name, array('id' => $entry_id), array('%d'));
+
+            if ($result !== false) {
+                $meta_result = $wpdb->delete($meta_table_name, array('cf7_entry_id' => $entry_id), array('%d'));
+                if ($meta_result !== false) {
+                    set_transient('scf7e_admin_success', 'Entry deleted successfully.', 10);  // Last parameter is the time in seconds until expiration
+                } else {
+                    set_transient('scf7e_admin_failed', 'Failed to delete the associated meta data.', 10);
+                }
+            } else {
+                set_transient('scf7e_admin_failed', 'Failed to delete entry.', 10);
+            }
+        } else {
+            set_transient('scf7e_admin_failed', 'Invalid entry ID.', 10);
+        }
+        wp_redirect( wp_get_referer() );
+    }
+
+    // display notices on entries page
+    public function scf7e_display_admin_notice() {
+
+        if ($notice = get_transient('scf7e_admin_success')) {      
+            echo '<div class="notice notice-success is-dismissible"><p>' . esc_html($notice) . '</p></div>';
+            delete_transient('scf7e_admin_success');
+        }
+
+        if ($notice = get_transient('scf7e_admin_failed')) {
+            echo '<div class="notice notice-error is-dismissible"><p>' . esc_html($notice) . '</p></div>';
+            delete_transient('scf7e_admin_failed');
+        }
+    }
+
+    public static function scf7e_get_entries_url( $page_slug, $form_id = null ) {
+        // Required parameter
+        // $page_slug = 'manage-cf7-entries';
+
+        // Optional parameters
+        $from_date = isset($_GET['from_date']) ? $_GET['from_date'] : null;
+        $to_date = isset($_GET['to_date']) ? $_GET['to_date'] : null;
+
+        // Build the base URL
+        $url = admin_url('admin.php');
+
+        // Create an array of query parameters
+        $query_args = array('page' => $page_slug);
+
+        
+        // Add optional parameters if they are set
+        if($form_id) {
+            $query_args['form'] = $form_id;
+        }
+        if (!empty($from_date)) {
+            $query_args['from_date'] = $from_date;
+        }
+        if (!empty($to_date)) {
+            $query_args['to_date'] = $to_date;
+        }
+
+        // Generate the final URL with the query parameters
+        $final_url = add_query_arg($query_args, $url);
+
+        return $final_url;
+    }
+
 
 }

@@ -36,7 +36,15 @@
                 <input type="submit" name="filter_action" id="post-query-submit" class="button" value="Filter">
             </div>
         </form>
-        <div class="tablenav-pages one-page"><span class="displaying-num"><a href="javascript:history.go(-1)">Go Back</a> | Total Entries: <?php echo esc_attr(count($formData)) ?></span>
+        <?php if($from_date || $to_date) { 
+        $reset_filter_url = add_query_arg(array('page' => 'form-entries', 'form' => $_GET['form']), admin_url('admin.php'));?>
+        <div class="alignleft actions">
+            <a type="button" id="post-query-submit" class="button" href="<?php echo esc_url($reset_filter_url); ?>">Clear Filters</a>
+        </div>
+        <?php }
+            $entries_goback_url = SCF7EMainController::scf7e_get_entries_url('manage-cf7-entries');
+        ?>
+        <div class="tablenav-pages one-page"><span class="displaying-num"><a href="<?php echo esc_url($entries_goback_url); ?>">Go Back</a> | Total Entries: <?php echo esc_attr(count($formData)) ?></span>
     </div>
 	<div class="bg-white">
 		<div class="ai1wm-left">
@@ -51,9 +59,10 @@
                         <?php endforeach; ?>
                         <?php $allMetaKeys = array_unique($allMetaKeys); ?>
                         <?php foreach ($allMetaKeys as $metaKey): ?>
-                            <th><?php echo esc_attr($metaKey); ?></th>
+                            <th><?php echo esc_attr(SCF7EMainController::scf7e_convert_to_title_case($metaKey)); ?></th>
                         <?php endforeach; ?>
                     <?php endif; ?>
+                    <th>Action</th>
                  </tr>
                 </thead>
                 <tbody>
@@ -65,6 +74,16 @@
                             <?php foreach ($allMetaKeys as $metaKey): ?>
                                 <td><?php echo isset($row['meta'][$metaKey]) ? esc_attr($row['meta'][$metaKey]) : ''; ?></td>
                             <?php endforeach; ?>
+                            <td>
+                                <form action="<?php echo admin_url('admin-post.php'); ?>" method="POST">
+                                    <input type="hidden" name="entry_id" value="<?php echo $row['cf7_entry_id']; ?>">
+                                    <input type="hidden" name="action" value="scf7e_delete_entry">
+                                    <?php wp_nonce_field('scf7e_delete_entry_nonce_action', 'scf7e_delete_entry_nonce'); ?>
+                                    <button type="submit" class="dashicon-button">
+                                        <span class="dashicons dashicons-trash"></span>
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                     <?php 
                     endforeach;
@@ -85,7 +104,7 @@
 <script>
     jQuery(document).ready( function ($) {
         var table = $('#entryTable').DataTable({
-            "autoWidth": true
+           "autoWidth": true
         });
         $('#toplevel_page_manage-cf7-entries').addClass('current');
         $('#toplevel_page_manage-cf7-entries a').addClass('current');

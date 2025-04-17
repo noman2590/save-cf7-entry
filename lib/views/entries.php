@@ -22,6 +22,12 @@
                 <input type="submit" name="filter_action" id="post-query-submit" class="button" value="Filter">		
             </div>
         </form>
+        <?php if($from_date || $to_date) { 
+        $reset_filter_url = add_query_arg(array('page' => 'manage-cf7-entries'), admin_url('admin.php'));?>
+        <div class="alignleft actions">
+            <a type="button" id="post-query-submit" class="button" href="<?php echo esc_url($reset_filter_url); ?>">Clear Filters</a>
+        </div>
+        <?php } ?>
         <div class="tablenav-pages one-page"><span class="displaying-num">Total Forms: <?php echo esc_attr(count($data['data'])) ?></span>
     </div>
 	<div class="bg-white">
@@ -39,12 +45,13 @@
                     <?php 
                     if(count($data['data'])){
                     foreach ($data['data'] as $key=>$value){ 
+                        $entries_view_url = SCF7EMainController::scf7e_get_entries_url('form-entries', $value->id);
                     ?>
                     <tr>
                         <td><?php echo esc_attr($value->id) ?></td>
                         <td><?php echo esc_attr($value->post_title) ?></td>
                         <td><?php echo esc_attr($value->total_entries) ?></td>
-                        <td><a class="btn button button-primary" href="<?php echo esc_attr(site_url());?>/wp-admin/admin.php?page=form-entries&form=<?php echo esc_attr($value->id); ?>&from_date=<?php echo esc_attr($from_date);?>&to_date=<?php echo esc_attr($to_date);?>">See Entries</a></td>
+                        <td><a class="btn button button-primary" href="<?php echo esc_url($entries_view_url); ?>">See Entries</a></td>
                     </tr>
                     <?php }}else { ?>
                     <tr>

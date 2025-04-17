@@ -1,10 +1,10 @@
 === Save CF7 Entry ===
 Contributors: nomanakram2590
-Tags: contact form enteirs, save contact forms, contact form backup
+Tags: contact form enteirs, save contact forms, contact form backup, save entries
 Requires at least: 5.0
 Requires PHP: 7.4
-Tested up to: 6.3.2
-Stable tag: 1.0.1
+Tested up to: 6.7.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +17,8 @@ This is a simple plugin that saves contact form 7 entries into the database for 
 2. Group enteirs for each contact form separately.
 3. Easy to use seach and sort for the data.
 4. Date filter to see entries bewtween some specific dates.
-5. Unlimited entries.
+5. Delete any entry by simply clicking the trash icon.
+6. Unlimited entries.
 
 
 = Privacy notices =
@@ -36,8 +37,8 @@ With the default configuration, this plugin, in itself, does not:
 
 == Screenshots ==
 
-1. screenshot-1.png
-2. screenshot-2.png
+1. List of all contact form with at least one entry.
+2. Form entries for a one of the forms.
 
 == Changelog ==
 
@@ -48,3 +49,8 @@ First Release.
 = 1.0.1 =
 
 Better layout for entries listing.
+
+= 1.0.2 =
+
+Better layout for entries listing with more readable column names.
+Ability to delete any entry.
