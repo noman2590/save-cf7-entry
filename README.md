@@ -19,14 +19,14 @@ Install the Save CF7 Entry plugin through the **Add Plugins** screen (**Plugins 
 Version
 -------
 
-Current version of the plugin is 1.0.1.
+Current version of the plugin is 1.0.3.
 
 Requirements
 ------------
 
 This plugin has the following requirements.
 1. PHP version 7.4 or greater.
-2. WordPress version 5.0 or greater.
+2. WordPress version 6.0 or greater.
 3. Contact form 7 plugin.
 
 Developed By

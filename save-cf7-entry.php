@@ -6,7 +6,7 @@ Author: Noman Akram
 Author URI: https://profiles.wordpress.org/nomanakram2590/
 Text Domain: save-cf7-entry
 Requires Plugins: contact-form-7
-Version: 1.0.2
+Version: 1.0.3
 */
 
 if ( ! defined( 'ABSPATH' ) ) exit;

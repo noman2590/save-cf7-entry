@@ -1,10 +1,10 @@
 === Save CF7 Entry ===
 Contributors: nomanakram2590
 Tags: contact form enteirs, save contact forms, contact form backup, save entries
-Requires at least: 5.0
+Requires at least: 6.0
 Requires PHP: 7.4
-Tested up to: 6.7.1
-Stable tag: 1.0.2
+Tested up to: 6.9
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,3 +54,11 @@ Better layout for entries listing.
 
 Better layout for entries listing with more readable column names.
 Ability to delete any entry.
+
+
+= 1.0.3 =
+
+Replaced client-side jQuery DataTables with fast, native WordPress server-side pagination.
+Implemented secure entry deletion with confirmation and success message.
+Full compatibility with WordPress core admin styling and behaviour.
+Various minor bug fixes and code refinements.
