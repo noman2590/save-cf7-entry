@@ -9,7 +9,7 @@ class SCF7EContactController extends SCF7EMainController {
          */
         global $wpdb;
 
-        $start_date = (isset($_GET['from_date']) && !empty($_GET['from_date'])) ? sanitize_text_field($_GET['from_date']) : null;
+        $start_date = (isset($_GET['from_date']) && !empty($_GET['from_date'])) ? sanitize_text_field($_GET['from_date']) : '2000-01-01';
         $end_date = (isset($_GET['to_date']) && !empty($_GET['to_date'])) ? date('Y-m-d', strtotime("+1 day", strtotime(sanitize_text_field($_GET['to_date'])))) : date('Y-m-d', strtotime("+1 day"));
 
         $sql = "SELECT forms.id, forms.post_title, COUNT(entries.post_id) AS total_entries 
@@ -34,37 +34,25 @@ class SCF7EContactController extends SCF7EMainController {
         load_template( SCF7E_LIB_PATH. '/views/entries.php' );
     }
 
-    public static function form_entry_details () {
-        global $wpdb;
-        $start_date = (isset($_GET['from_date']) && !empty($_GET['from_date'])) ? sanitize_text_field($_GET['from_date']) : null;
-        $end_date = (isset($_GET['to_date']) && !empty($_GET['to_date'])) ? date('Y-m-d', strtotime("+1 day", strtotime(sanitize_text_field($_GET['to_date'])))) : date('Y-m-d', strtotime("+1 day"));
+    public static function form_entry_details() {
+        $formid = isset($_GET['form']) ? absint($_GET['form']) : 0;
+        if (!$formid) {
+            wp_die('Invalid form ID.', 'Access Denied', ['response' => 403]);
+        }
         
-        $formid = sanitize_text_field($_GET['form']); 
-        if(isset($formid) && !empty($formid)) {
-
-            $sql = "SELECT *
-            FROM {$wpdb->prefix}cf7_entries AS entries
-            LEFT JOIN {$wpdb->prefix}cf7_entry_meta AS entrymeta
-            ON entries.id = entrymeta.cf7_entry_id
-            WHERE entries.post_id = $formid
-            AND entries.created_at >= %s 
-            AND entries.created_at <= %s;
-            ";
-
-            $entries =  $wpdb->get_results(
-                $wpdb->prepare(
-                    $sql,
-                    $start_date,
-                    $end_date
-                )
-            );
-
-            parent::set_query_var_custom(['data'=> $entries ]);
-            load_template( SCF7E_LIB_PATH. '/views/entry-details.php' );
-        }
-        else {
-            wp_die('Sorry, you are not allowed to access this page.', 'Access Denied', array('response' => 403));
-        }
-    } 
+        // Include the list table class
+        require_once SCF7E_PLUGIN_PATH . DIRECTORY_SEPARATOR . 'includes/class-scf7e-entries-list-table.php';
+    
+        $list_table = new SCF7E_Entries_List_Table($formid);
+        $list_table->prepare_items();
+    
+        // Pass to view
+        parent::set_query_var_custom([
+            'list_table' => $list_table,
+            'form_id'    => $formid
+        ]);
+    
+        load_template(SCF7E_LIB_PATH . '/views/entry-details.php');
+    }
 }
 

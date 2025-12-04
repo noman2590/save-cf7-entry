@@ -12,7 +12,6 @@ class SCF7EMainController
         add_action('wpcf7_before_send_mail', array($this, 'scf7e_save_cf7_entry'));
         add_action('admin_menu', array( $this, 'scf7e_admin_menu' ));
         add_action('admin_menu', array( $this, 'scf7e_register_custom_admin_page' ));
-        add_action('admin_enqueue_scripts', array( $this, 'scf7e_enqueue_admin_scripts'));
         add_action('admin_init', array( $this, 'scf7e_check_cf7_installed'));
         add_action('admin_post_scf7e_delete_entry', array( $this, 'scf7e_handle_delete_entry'));
         add_action('admin_notices', array( $this, 'scf7e_display_admin_notice'));
@@ -109,16 +108,6 @@ class SCF7EMainController
         }
     }
 
-    // enqueue wp admin script
-    function scf7e_enqueue_admin_scripts () {
-        global $pagenow;
-        if ($pagenow === 'admin.php' && $_GET['page'] === 'form-entries') {
-            wp_enqueue_script('data_tables', SCF7E_PLUGIN_URL . '/lib/assets/js/jquery.dataTables.min.js', array('jquery'), '1.10.25', true);
-            wp_enqueue_style('data_tables_style', SCF7E_PLUGIN_URL . '/lib/assets/css/jquery.dataTables.min.css');
-        }
-        wp_enqueue_style('plugin-style', SCF7E_PLUGIN_URL . '/lib/assets/css/style.css');
-    }
-
     // show notice if contact form plugin isn't active
     public function scf7e_check_cf7_installed() {
         if (!class_exists('WPCF7')) {
@@ -144,43 +133,38 @@ class SCF7EMainController
 
     // function to delete entries
     public function scf7e_handle_delete_entry() {
-
+        check_admin_referer( 'scf7e_delete_entry', 'scf7e_delete_nonce' );
+    
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( 'Unauthorized' );
+        }
+    
+        $entry_id = isset( $_POST['scf7e_delete'] ) ? absint( $_POST['scf7e_delete'] ) : 0;
+        if ( ! $entry_id ) {
+            wp_die( 'Invalid entry' );
+        }
+    
         global $wpdb;
-
-        if (!isset($_POST['scf7e_delete_entry_nonce']) || !wp_verify_nonce($_POST['scf7e_delete_entry_nonce'], 'scf7e_delete_entry_nonce_action')) {
-            set_transient('scf7e_admin_failed', 'Nonce verification failed.', 10);
-            wp_redirect( wp_get_referer() );
-            exit;
-        }
-
-        if (!current_user_can('manage_options')) {
-            set_transient('scf7e_admin_failed', 'You do not have permission to perform this action.', 10);
-            wp_redirect( wp_get_referer() );
-            exit;
-        }
-
-        if (isset($_POST['entry_id']) && is_numeric($_POST['entry_id'])) {
-            $entry_id = intval($_POST['entry_id']);
-
-            $table_name = $wpdb->prefix . 'cf7_entries';
-            $meta_table_name = $wpdb->prefix . 'cf7_entry_meta'; 
-
-            $result = $wpdb->delete($table_name, array('id' => $entry_id), array('%d'));
-
-            if ($result !== false) {
-                $meta_result = $wpdb->delete($meta_table_name, array('cf7_entry_id' => $entry_id), array('%d'));
-                if ($meta_result !== false) {
-                    set_transient('scf7e_admin_success', 'Entry deleted successfully.', 10);  // Last parameter is the time in seconds until expiration
-                } else {
-                    set_transient('scf7e_admin_failed', 'Failed to delete the associated meta data.', 10);
-                }
-            } else {
-                set_transient('scf7e_admin_failed', 'Failed to delete entry.', 10);
-            }
-        } else {
-            set_transient('scf7e_admin_failed', 'Invalid entry ID.', 10);
-        }
-        wp_redirect( wp_get_referer() );
+        $wpdb->delete( $wpdb->prefix . 'cf7_entries',     [ 'id' => $entry_id ], [ '%d' ] );
+        $wpdb->delete( $wpdb->prefix . 'cf7_entry_meta', [ 'cf7_entry_id' => $entry_id ], [ '%d' ] );
+    
+        // SET SUCCESS MESSAGE — 100% guaranteed to show
+        set_transient( 'scf7e_entry_deleted', true, 30 );
+    
+        // Clean redirect — no deleted=1 needed
+        $redirect_url = admin_url( 'admin.php' );
+        $args = [
+            'page' => 'form-entries',
+            'form' => absint( $_POST['form'] ?? 0 ),
+        ];
+        if ( ! empty( $_POST['from_date'] ) ) $args['from_date'] = sanitize_text_field( $_POST['from_date'] );
+        if ( ! empty( $_POST['to_date'] ) )   $args['to_date']   = sanitize_text_field( $_POST['to_date'] );
+        if ( ! empty( $_POST['paged'] ) )     $args['paged']     = absint( $_POST['paged'] );
+    
+        $redirect_url = add_query_arg( $args, $redirect_url );
+    
+        wp_safe_redirect( $redirect_url );
+        exit;
     }
 
     // display notices on entries page
@@ -198,8 +182,6 @@ class SCF7EMainController
     }
 
     public static function scf7e_get_entries_url( $page_slug, $form_id = null ) {
-        // Required parameter
-        // $page_slug = 'manage-cf7-entries';
 
         // Optional parameters
         $from_date = isset($_GET['from_date']) ? $_GET['from_date'] : null;
@@ -228,6 +210,4 @@ class SCF7EMainController
 
         return $final_url;
     }
-
-
 }
